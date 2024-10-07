@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Heading,
@@ -17,25 +17,34 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const revenueData = [
-  { month: 'Jan', revenue: 4000 },
-  { month: 'Feb', revenue: 3000 },
-  { month: 'Mar', revenue: 5000 },
-  { month: 'Apr', revenue: 4500 },
-  { month: 'May', revenue: 6000 },
-  { month: 'Jun', revenue: 5500 },
-];
-
-const transactions = [
-  { id: 1, date: '2023-06-01', description: 'Course Purchase', amount: 99.99 },
-  { id: 2, date: '2023-06-02', description: 'Subscription Renewal', amount: 29.99 },
-  { id: 3, date: '2023-06-03', description: 'Course Bundle Sale', amount: 199.99 },
-];
+import API_URL from '../../Constants/Const';
 
 const FinancePage = () => {
+  const [financialData, setFinancialData] = useState(null);
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/pay/all`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const data = await response.json();
+        setFinancialData(data.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!financialData) {
+    return <Box>Loading...</Box>;
+  }
 
   return (
     <Box spacing={6}>
@@ -44,55 +53,56 @@ const FinancePage = () => {
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mb={6}>
         <Stat bg={bg} p={4} borderRadius="md" borderWidth={1} borderColor={borderColor}>
           <StatLabel>Total Revenue</StatLabel>
-          <StatNumber>$28,000</StatNumber>
-          <StatHelpText>↑ 12% from last month</StatHelpText>
+          <StatNumber>${financialData.totalEarned}</StatNumber>
+          <StatHelpText>Total amount earned</StatHelpText>
         </Stat>
         <Stat bg={bg} p={4} borderRadius="md" borderWidth={1} borderColor={borderColor}>
-          <StatLabel>Active Subscriptions</StatLabel>
-          <StatNumber>1,240</StatNumber>
-          <StatHelpText>↑ 5% from last month</StatHelpText>
+          <StatLabel>Number of Courses</StatLabel>
+          <StatNumber>{financialData.courseEarnings.length}</StatNumber>
+          <StatHelpText>Courses generating revenue</StatHelpText>
         </Stat>
         <Stat bg={bg} p={4} borderRadius="md" borderWidth={1} borderColor={borderColor}>
-          <StatLabel>Average Order Value</StatLabel>
-          <StatNumber>$85.50</StatNumber>
-          <StatHelpText>↓ 2% from last month</StatHelpText>
+          <StatLabel>Average Earnings per Course</StatLabel>
+          <StatNumber>
+            ${(financialData.totalEarned / financialData.courseEarnings.length).toFixed(2)}
+          </StatNumber>
+          <StatHelpText>Based on current data</StatHelpText>
         </Stat>
       </SimpleGrid>
 
       <Box bg={bg} p={4} borderRadius="md" borderWidth={1} borderColor={borderColor} mb={6}>
-        <Heading as="h2" size="md" mb={4}>Revenue Overview</Heading>
+        <Heading as="h2" size="md" mb={4}>Course Earnings Overview</Heading>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={revenueData}>
+          <BarChart data={financialData.courseEarnings}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
+            <XAxis dataKey="courseTitle" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="revenue" fill="#3182CE" />
+            <Bar dataKey="totalEarned" fill="#3182CE" />
           </BarChart>
         </ResponsiveContainer>
       </Box>
 
       <Box bg={bg} p={4} borderRadius="md" borderWidth={1} borderColor={borderColor}>
-        <Heading as="h2" size="md" mb={4}>Recent Transactions</Heading>
+        <Heading as="h2" size="md" mb={4}>Course Earnings Details</Heading>
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Date</Th>
-              <Th>Description</Th>
-              <Th isNumeric>Amount</Th>
+              <Th>Course Title</Th>
+              <Th>Course ID</Th>
+              <Th isNumeric>Total </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {transactions.map((transaction) => (
-              <Tr key={transaction.id}>
-                <Td>{transaction.date}</Td>
-                <Td>{transaction.description}</Td>
-                <Td isNumeric>${transaction.amount.toFixed(2)}</Td>
+            {financialData.courseEarnings.map((course) => (
+              <Tr key={course.courseId}>
+                <Td>{course.courseTitle}</Td>
+                <Td>{course.courseId}</Td>
+                <Td isNumeric>${course.totalEarned}</Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
-        <Button mt={4} colorScheme="blue">View All Transactions</Button>
       </Box>
     </Box>
   );

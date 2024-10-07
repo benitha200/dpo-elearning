@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, BookOpen, Video, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const scheduleData = [
+const initialScheduleData = [
   { event: 'Web Dev Live Session', time: '10:00 AM - 11:30 AM', date: '2024-09-15', type: 'live' },
   { event: 'Data Science Project Due', time: '11:59 PM', date: '2024-09-18', type: 'assignment' },
   { event: 'UX Design Workshop', time: '2:00 PM - 4:00 PM', date: '2024-09-20', type: 'workshop' },
@@ -27,6 +27,8 @@ const eventTypeColors = {
 
 const Schedule = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [scheduleData, setScheduleData] = useState(initialScheduleData);
+  const [newEvent, setNewEvent] = useState({ event: '', date: '', time: '', type: 'live' });
 
   const nextWeek = () => {
     setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 7)));
@@ -34,6 +36,19 @@ const Schedule = () => {
 
   const prevWeek = () => {
     setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 7)));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newEvent.event && newEvent.date && newEvent.time) {
+      setScheduleData(prev => [...prev, newEvent]);
+      setNewEvent({ event: '', date: '', time: '', type: 'live' });
+    }
   };
 
   return (
@@ -81,7 +96,7 @@ const Schedule = () => {
             <div className="bg-white shadow-lg rounded-lg overflow-hidden p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Today's Schedule</h2>
               <ul className="space-y-3">
-                {scheduleData.slice(0, 2).map((item, index) => (
+                {scheduleData.filter(item => new Date(item.date).toDateString() === new Date().toDateString()).map((item, index) => (
                   <li key={index} className="flex items-center">
                     <Clock className="h-5 w-5 text-gray-400 mr-2" />
                     <span className="text-sm text-gray-600">{item.time}</span>
@@ -92,19 +107,44 @@ const Schedule = () => {
             </div>
             <div className="bg-white shadow-lg rounded-lg overflow-hidden p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Add Event</h2>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <input
                   type="text"
+                  name="event"
+                  value={newEvent.event}
+                  onChange={handleInputChange}
                   placeholder="Event Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
                 />
                 <input
                   type="date"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  name="date"
+                  value={newEvent.date}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
                 />
+                <input
+                  type="time"
+                  name="time"
+                  value={newEvent.time}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+                <select
+                  name="type"
+                  value={newEvent.type}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+                >
+                  <option value="live">Live Session</option>
+                  <option value="assignment">Assignment</option>
+                  <option value="workshop">Workshop</option>
+                  <option value="qa">Q&A</option>
+                  <option value="course">Course</option>
+                </select>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+                  className="w-full bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 transition duration-300"
                 >
                   Add Event
                 </button>

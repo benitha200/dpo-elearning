@@ -4,9 +4,9 @@ import { Users, DollarSign, BookOpen, TrendingUp, User, FileText, Database } fro
 
 // Sample data (in a real application, this would come from an API)
 const overviewData = [
-  { name: 'Total Users', value: 15000, icon: Users, change: 12.5 },
-  { name: 'Total Courses', value: 250, icon: BookOpen, change: 5.2 },
-  { name: 'Total Revenue', value: '$500,000', icon: DollarSign, change: 8.7 },
+  { name: 'Total Users', value: 6, icon: Users, change: 12.5 },
+  { name: 'Total Courses', value: 7, icon: BookOpen, change: 5.2 },
+  { name: 'Total Revenue', value: '$200', icon: DollarSign, change: 8.7 },
   { name: 'Active Users', value: 8500, icon: Users, change: 3.1 },
 ];
 

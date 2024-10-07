@@ -25,7 +25,7 @@ const Dashboard = () => {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="completed" fill="#4F46E5" />
+                <Bar dataKey="completed" fill='#0284c7' className='bg-sky-600' />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -43,7 +43,7 @@ const Dashboard = () => {
               ].map((item, index) => (
                 <li key={index} className="py-4">
                   <div className="flex items-center">
-                    <Calendar className="h-5 w-5 text-indigo-500 mr-2" />
+                    <Calendar className="h-5 w-5 text-sky-500 mr-2" />
                     <p className="text-sm font-medium text-gray-900">{item.course}: {item.task}</p>
                   </div>
                   <p className="mt-1 text-sm text-gray-500">{item.date}</p>
@@ -65,7 +65,7 @@ const Dashboard = () => {
               ].map((item, index) => (
                 <li key={index} className="py-4">
                   <div className="flex items-center">
-                    <Clock className="h-5 w-5 text-indigo-500 mr-2" />
+                    <Clock className="h-5 w-5 text-sky-500 mr-2" />
                     <p className="text-sm font-medium text-gray-900">{item.action}</p>
                   </div>
                   <p className="mt-1 text-sm text-gray-500">{item.course} - {item.time}</p>
@@ -88,7 +88,7 @@ const Dashboard = () => {
           ].map((item, index) => (
             <div key={index} className="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition duration-300 ease-in-out">
               <div className="p-5 flex flex-col items-center">
-                <item.icon className="h-8 w-8 text-indigo-600 mb-2" />
+                <item.icon className="h-8 w-8 text-sky-600 mb-2" />
                 <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
               </div>
             </div>

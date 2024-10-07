@@ -36,14 +36,14 @@ const Settings = () => {
               <FormLabel>Full Name</FormLabel>
               <Input placeholder="Your full name" />
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
               <FormLabel>Email</FormLabel>
               <Input type="email" placeholder="your.email@example.com" />
             </FormControl>
             <FormControl>
               <FormLabel>Password</FormLabel>
               <Input type="password" placeholder="••••••••" />
-            </FormControl>
+            </FormControl> */}
             <Button colorScheme="blue">Update Account</Button>
           </VStack>
         </Box>
