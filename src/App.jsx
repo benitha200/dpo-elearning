@@ -94,10 +94,10 @@ const App = () => {
     return (
       <Router>
         <Routes>
-          <Route path='/' element={<HomePage />} />
+          <Route path='/home' element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Router>
     );
