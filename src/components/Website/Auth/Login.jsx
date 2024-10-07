@@ -116,7 +116,7 @@ const Login = ({ onLogin }) => {
               Don't have an account?{' '}
             </span>
             <a
-              href="#"
+              href="/register"
               className="text-sky-600 hover:text-sky-700 transition duration-150"
             >
               Sign up
