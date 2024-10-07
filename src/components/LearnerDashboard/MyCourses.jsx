@@ -283,7 +283,8 @@ import {
   Flex,
   Badge,
   Divider,
-  useColorModeValue
+  useColorModeValue,
+  Progress
 } from '@chakra-ui/react';
 import { Spinner } from '@chakra-ui/spinner';
 import { Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/alert';
@@ -298,6 +299,7 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [enrollingCourseId, setEnrollingCourseId] = useState(null);
+  const [courseProgress, setCourseProgress] = useState({});
 
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const cardBg = useColorModeValue('white', 'gray.700');
@@ -326,6 +328,28 @@ const MyCourses = () => {
         const enrolledCourseIds = new Set(enrolledCoursesResponse.data.data.map(enrollment => enrollment.courseId));
         setEnrolledCourses(enrolledCoursesResponse.data.data);
         setAllCourses(allCoursesResponse.data.data.filter(course => !enrolledCourseIds.has(course.id)));
+        
+        // Fetch progress for each enrolled course
+        const progressPromises = enrolledCoursesResponse.data.data.map(enrollment =>
+          axios.get(`${API_URL}/api/progress/${enrollment.courseId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/json'
+            }
+          })
+        );
+        const progressResponses = await Promise.all(progressPromises);
+        
+        const newCourseProgress = {};
+        progressResponses.forEach((response, index) => {
+          const courseId = enrolledCoursesResponse.data.data[index].courseId;
+          const progressData = response.data;
+          const totalProgress = progressData.reduce((sum, lesson) => sum + lesson.progress, 0);
+          const averageProgress = progressData.length > 0 ? totalProgress / progressData.length : 0;
+          newCourseProgress[courseId] = Math.round(averageProgress);
+        });
+        setCourseProgress(newCourseProgress);
+
         setLoading(false);
       } catch (err) {
         console.error('Error fetching courses:', err);
@@ -438,9 +462,10 @@ const MyCourses = () => {
           </Flex>
           <Flex align="center">
             <FaClock />
-            <Text ml={2}>Progress: 0%</Text>
+            <Text ml={2}>Progress: {courseProgress[enrollment.courseId] || 0}%</Text>
           </Flex>
         </Flex>
+        <Progress value={courseProgress[enrollment.courseId] || 0} mt={2} colorScheme="blue" />
         <Button
           mt={4}
           colorScheme="blue"

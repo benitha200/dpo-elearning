@@ -39,6 +39,8 @@ import ViewCourseAssignment from './components/InstructorDashboard/MyAssignments
 import HomePage from './components/Website/HomePage/HomePage';
 import QuizComponent from './components/LearnerDashboard/QuizComponent';
 import AssessmentPage from './components/LearnerDashboard/AssessmentPage';
+import AddLesson from './components/AdminDashboard/Lessons/AddLessonModal';
+// import AddLesson from './components/AdminDashboard/Lessons/AddLesson';
 
 // Sidebar Link Component
 const SidebarLink = ({ icon: Icon, text, to }) => {
@@ -128,6 +130,7 @@ const App = () => {
             <Route path="/courses" element={<MyCoursesAsInstructor />} />
             <Route path="/course/:courseId" element={<CourseContent />} />
             <Route path="/course/:courseId/lesson/:lessonId" element={<LessonContent />} />
+            <Route path="/add-lesson/:courseId" element={<AddLesson />} />
             <Route path="/assignment/:courseId" element={<ViewCourseAssignment />} />
             <Route path="/assignment/new" element={<AddAssignmentPage />} />
             <Route path="/assignment/new/:courseId?" element={<AddAssignmentPage />} />
@@ -148,6 +151,7 @@ const App = () => {
             <Route path="/courses/edit/:id" element={<EditCoursePage />} />
             <Route path="/courses/view/:id" element={<ViewCoursePage />} />
             <Route path="/courses/new" element={<NewCoursePage />} />
+            <Route path="/add-lesson/:courseId" element={<AddLesson />} />
             <Route path="/finance" element={<FinancePage />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/data-managment" element={<DataManagementPage />} />

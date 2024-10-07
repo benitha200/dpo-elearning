@@ -110,6 +110,19 @@ const Login = ({ onLogin }) => {
           </div>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
         </form>
+        <div>
+          <div className="flex items-center justify-center mt-4">
+            <span className="text-sm font-medium text-gray-700 pr-2">
+              Don't have an account?{' '}
+            </span>
+            <a
+              href="#"
+              className="text-sky-600 hover:text-sky-700 transition duration-150"
+            >
+              Sign up
+            </a>
+            </div>
+        </div>
          
         </div>
       </div>
