@@ -1,9 +1,7 @@
 {
-  "name": "dpelearning",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://benitha200.github.io/dpo-elearning/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

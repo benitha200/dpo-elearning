@@ -40,6 +40,7 @@ import HomePage from './components/Website/HomePage/HomePage';
 import QuizComponent from './components/LearnerDashboard/QuizComponent';
 import AssessmentPage from './components/LearnerDashboard/AssessmentPage';
 import AddLesson from './components/AdminDashboard/Lessons/AddLessonModal';
+import AssessmentsPage from './components/InstructorDashboard/MyAssignmentsManagment/AssignmentsPage';
 // import AddLesson from './components/AdminDashboard/Lessons/AddLesson';
 
 // Sidebar Link Component
@@ -152,6 +153,19 @@ const App = () => {
             <Route path="/courses/view/:id" element={<ViewCoursePage />} />
             <Route path="/courses/new" element={<NewCoursePage />} />
             <Route path="/add-lesson/:courseId" element={<AddLesson />} />
+
+            <Route path="/assignments" element={<AssessmentsPage />} />
+            <Route path="/assignment/:courseId/:assessmentId" element={<ViewCourseAssignment />} />
+            <Route path="/assignment/new" element={<AddAssignmentPage />} />
+            <Route path="/assignment/new/:courseId" element={<AddAssignmentPage />} />
+            <Route path="/assignment/edit/:assessmentId" element={<AddAssignmentPage />} />
+
+            {/* <Route path="/assignment/:courseId" element={<ViewCourseAssignment />} />
+            <Route path="/assignment/new" element={<AddAssignmentPage />} />
+            <Route path="/assignment/new/:courseId?" element={<AddAssignmentPage />} /> */}
+            <Route path="/progress" element={<StudentsProgress />} />
+            <Route path="/assignment" element={<AssignmentsPage />} />
+
             <Route path="/finance" element={<FinancePage />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/data-managment" element={<DataManagementPage />} />
@@ -198,6 +212,7 @@ const App = () => {
             <SidebarLink icon={Home} text="Dashboard" to="/" />
             <SidebarLink icon={Users} text="Users" to="/users" />
             <SidebarLink icon={BookOpen} text="Courses" to="/courses" />
+            <SidebarLink icon={Calendar} text="Assignments" to="/assignment" />
             <SidebarLink icon={DollarSign} text="Finance" to="/finance" />
             <SidebarLink icon={FileText} text="Reports" to="/reports" />
             {/* <SidebarLink icon={Database} text="Data Management" to="/data-managment" /> */}

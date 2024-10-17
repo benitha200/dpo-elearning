@@ -215,7 +215,7 @@ const FinancePage = () => {
               <XAxis dataKey="courseTitle" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="totalEarned" fill={accentColor} />
+              <Bar dataKey="totalEarned" fill="#00AEAE" />
             </BarChart>
           </ResponsiveContainer>
         </Box>
@@ -258,7 +258,7 @@ const FinancePage = () => {
                   </Td>
                   <Td isNumeric>
                     {/* <Text fontWeight="bold" color={accentColor}>${course.totalEarned}</Text> */}
-                    <Badge colorScheme="blue" fontWeight="bold" fontSize={14}>${course.totalEarned}</Badge>
+                    <Badge colorScheme="cyan" fontWeight="bold" fontSize={14}>${course.totalEarned}</Badge>
                   </Td>
                 </Tr>
               ))}

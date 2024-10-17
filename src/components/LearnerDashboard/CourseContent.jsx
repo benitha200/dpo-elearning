@@ -1,3 +1,20 @@
+// import React, { useState, useEffect } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { Play, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+// import API_URL from '../../Constants/Const';
+
+// const CourseContent = () => {
+//   const { courseId } = useParams();
+//   const navigate = useNavigate();
+//   const [course, setCourse] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [progress, setProgress] = useState(0);
+//   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+//   const [showDescription, setShowDescription] = useState(false);
+//   const [flatLessons, setFlatLessons] = useState([]);
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -38,25 +55,30 @@ const CourseContent = () => {
           setCourse({ title: "No lessons available" });
           setFlatLessons([]);
         } else if (courseResponse.data.data && courseResponse.data.data.length > 0) {
-          const courseData = courseResponse.data.data[0];
-          const mainLesson = {
-            id: courseData.id,
-            title: courseData.title,
-            content: courseData.content,
-            videoUrl: courseData.videoUrl,
-            isMainLesson: true,
-            quizzes: courseData.quizzes
-          };
-          const subLessons = courseData.subLessons || [];
-          const allLessons = [mainLesson, ...subLessons];
+          const courseData = courseResponse.data.data;
+          const allLessons = courseData.flatMap(lesson => {
+            const mainLesson = {
+              id: lesson.id,
+              title: lesson.title,
+              content: lesson.content,
+              videoUrl: lesson.videoUrl,
+              isMainLesson: true,
+              quizzes: lesson.quizzes
+            };
+            const subLessons = lesson.subLessons.map(subLesson => ({
+              ...subLesson,
+              isMainLesson: false
+            }));
+            return [mainLesson, ...subLessons];
+          });
 
           setCourse({
-            ...courseData.course,
+            ...courseData[0].course,
             lessons: allLessons
           });
           setFlatLessons(allLessons);
 
-          const overallProgress = progressResponse.data[0].progress;
+          const overallProgress = progressResponse?.data[0]?.progress || 0;
           setProgress(overallProgress);
         } else {
           throw new Error('No course data found');
@@ -72,6 +94,64 @@ const CourseContent = () => {
 
     fetchCourse();
   }, [courseId]);
+
+  // useEffect(() => {
+  //   const fetchCourse = async () => {
+  //     try {
+  //       const token = localStorage.getItem('token');
+  //       const [courseResponse, progressResponse] = await Promise.all([
+  //         axios.get(`${API_URL}/api/lesson/byCourse/${courseId}`, {
+  //           headers: {
+  //             'Authorization': `Bearer ${token}`,
+  //             'Accept': 'application/json'
+  //           }
+  //         }),
+  //         axios.get(`${API_URL}/api/progress/${courseId}`, {
+  //           headers: {
+  //             'Authorization': `Bearer ${token}`,
+  //             'Accept': 'application/json'
+  //           }
+  //         })
+  //       ]);
+
+  //       if (courseResponse.data.message === "No lessons found") {
+  //         setCourse({ title: "No lessons available" });
+  //         setFlatLessons([]);
+  //       } else if (courseResponse.data.data && courseResponse.data.data.length > 0) {
+  //         const courseData = courseResponse.data.data[0];
+  //         const mainLesson = {
+  //           id: courseData.id,
+  //           title: courseData.title,
+  //           content: courseData.content,
+  //           videoUrl: courseData.videoUrl,
+  //           isMainLesson: true,
+  //           quizzes: courseData.quizzes
+  //         };
+  //         const subLessons = courseData.subLessons || [];
+  //         const allLessons = [mainLesson, ...subLessons];
+
+  //         setCourse({
+  //           ...courseData.course,
+  //           lessons: allLessons
+  //         });
+  //         setFlatLessons(allLessons);
+
+  //         const overallProgress = progressResponse?.data[0]?.progress || 0;
+  //         setProgress(overallProgress);
+  //       } else {
+  //         throw new Error('No course data found');
+  //       }
+
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.error('Error fetching course:', err);
+  //       setError('Failed to fetch course content. Please try again later.');
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCourse();
+  // }, [courseId]);
 
   const handleLessonClick = (index) => {
     setCurrentLessonIndex(index);
@@ -183,7 +263,7 @@ const CourseContent = () => {
                 </div>
               )}
               {showDescription && (
-                <div className="absolute bottom-0 left-0 right-0 bg-sky-800 bg-opacity-70 text-white p-4">
+                <div className="absolute bottom-0 left-0 right-0 bg-sky-800 bg-opacity-70 text-white p-2">
                   <h3 className="font-bold">{currentLesson.title}</h3>
                 </div>
               )}
@@ -216,7 +296,7 @@ const CourseContent = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:w-1/4">
+          {/* <div className="lg:w-1/4">
             <h3 className="text-xl font-bold mb-4 text-sky-800">Lessons</h3>
             <ul>
               {flatLessons.map((lesson, index) => (
@@ -227,6 +307,26 @@ const CourseContent = () => {
                       ? 'bg-sky-800 text-white'
                       : 'hover:bg-sky-100'
                   }`}
+                  onClick={() => handleLessonClick(index)}
+                >
+                  {lesson.title}
+                </li>
+              ))}
+            </ul>
+          </div> */}
+
+                    {/* Sidebar */}
+                    <div className="lg:w-1/4">
+            <h3 className="text-xl font-bold mb-4 text-sky-800">Lessons</h3>
+            <ul>
+              {flatLessons.map((lesson, index) => (
+                <li
+                  key={lesson.id}
+                  className={`cursor-pointer p-2 rounded ${
+                    index === currentLessonIndex
+                      ? 'bg-sky-800 text-white'
+                      : 'hover:bg-sky-100'
+                  } ${lesson.isMainLesson ? 'font-bold' : 'pl-4'}`}
                   onClick={() => handleLessonClick(index)}
                 >
                   {lesson.title}
