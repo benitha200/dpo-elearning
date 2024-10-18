@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import resolve from '@rollup/plugin-node-resolve';
+import path from 'path';
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,11 @@ export default defineConfig({
   server: {
     watch: {
       usePolling: true,
+    },
+  },
+  resolve: {
+    alias: {
+      '@components': path.resolve(__dirname, 'src/components'),
     },
   },
   build: {

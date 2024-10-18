@@ -286,8 +286,6 @@ import {
   useColorModeValue,
   Progress
 } from '@chakra-ui/react';
-// import { Spinner } from '@chakra-ui/spinner';
-// import { AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/alert';
 import { FaBook, FaDollarSign, FaUser, FaCalendar, FaClock } from 'react-icons/fa';
 import API_URL from '../../Constants/Const';
 import { Alert, AlertIcon, AlertTitle,AlertDescription, Spinner } from '@chakra-ui/react';
