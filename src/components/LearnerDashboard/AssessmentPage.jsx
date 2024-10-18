@@ -363,7 +363,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Custom axios instance with increased timeout
 const apiClient = axios.create({
-  timeout: 30000, // 30 seconds
+  timeout: 300000, // 30 seconds
 });
 
 const AssessmentPage = () => {
@@ -405,7 +405,7 @@ const AssessmentPage = () => {
         }
 
         // Calculate delay with exponential backoff (2^attempt * 1000ms)
-        const backoffDelay = Math.min(1000 * Math.pow(2, attempt), 8000);
+        const backoffDelay = Math.min(3000 * Math.pow(2, attempt), 8000);
         await delay(backoffDelay);
 
         // Show retry toast
