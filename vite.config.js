@@ -13,4 +13,9 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  build: {
+    rollupOptions: {
+      external: ['@chakra-ui/react'],
+    },
+  },
 });
