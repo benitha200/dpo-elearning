@@ -93,7 +93,13 @@ const HomePage = () => {
               {/* <Link onClick={() => scrollToSection(testimonialsRef)}>Testimonials</Link> */}
             </HStack>
             <Button colorScheme="blue">
-              <Link href='/login' color="white">Login</Link>
+              <Link style={{ color: 'white' }}><a
+              href="/login"
+              className="text-white hover:text-sky-700 transition duration-150"
+            >
+              Login
+              </a>
+            </Link>
             </Button>
           </Flex>
         </Container>
@@ -117,9 +123,54 @@ const HomePage = () => {
               </VStack>
               <Button size="lg" colorScheme="yellow" onClick={() => scrollToSection(coursesRef)}>Explore Courses</Button>
             </Box>
-            <Box flex={1}>
-              <Image src={img1} alt="Data Security Learning" borderRadius="lg" boxShadow="xl" />
+            {/* <Box flex={1}> */}
+            {/* <Image src={img1} alt="Data Security Learning" borderRadius="lg" boxShadow="xl" /> */}
+            {/* <video
+                controls
+                autoPlay
+                muted
+                loop
+                src="/src/assets/videos/1.mp4"
+                poster={img1}
+                style={{
+                  borderRadius: '1rem',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              >
+                Your browser does not support the video tag.
+              </video> */}
+
+            <Box
+              flex={1.5}
+              w="100%"
+              maxW={{ base: "100%", lg: "800px" }}
+              order={{ base: 2, lg: 1 }}
+            >
+              <AspectRatio ratio={16 / 9}>
+                <video
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                  src="/src/assets/videos/1.mp4"
+                  poster={img1}
+                  style={{
+                    borderRadius: '1rem',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                >
+                  Your browser does not support the video tag.
+                </video>
+
+              </AspectRatio>
             </Box>
+            {/* </Box> */}
           </Flex>
         </Container>
       </Box>
@@ -174,25 +225,28 @@ const HomePage = () => {
       {/* About Us */}
       <Box as="section" bg="blue.600" py={20} color="white" ref={whyUsRef}>
         <Container maxW="container.xl">
-          <Flex 
-            direction={{ base: 'column', lg: 'row' }} 
-            align="center" 
+          <Flex
+            direction={{ base: 'column', lg: 'row' }}
+            align="center"
             justify="space-between"
             gap={10}
           >
-            <Box 
-              flex={1.5} 
-              w="100%" 
+            <Box
+              flex={1.5}
+              w="100%"
               maxW={{ base: "100%", lg: "800px" }}
               order={{ base: 2, lg: 1 }}
             >
               <AspectRatio ratio={16 / 9}>
-                <video 
+                <video
                   controls
+                  autoPlay
+                  muted
+                  loop
                   src="/src/assets/videos/1.mp4"
                   poster={img1}
-                  style={{ 
-                    borderRadius: '1rem', 
+                  style={{
+                    borderRadius: '1rem',
                     boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
                     width: '100%',
                     height: '100%',
@@ -201,10 +255,11 @@ const HomePage = () => {
                 >
                   Your browser does not support the video tag.
                 </video>
+
               </AspectRatio>
             </Box>
-            <VStack 
-              flex={1} 
+            <VStack
+              flex={1}
               align={{ base: "center", lg: "flex-start" }}
               spacing={6}
               order={{ base: 1, lg: 2 }}

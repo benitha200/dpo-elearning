@@ -1,25 +1,154 @@
-// import React, { useState, useEffect } from 'react';
-// import { useParams, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import { Play, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-// import API_URL from '../../Constants/Const';
-
-// const CourseContent = () => {
-//   const { courseId } = useParams();
-//   const navigate = useNavigate();
-//   const [course, setCourse] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [progress, setProgress] = useState(0);
-//   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-//   const [showDescription, setShowDescription] = useState(false);
-//   const [flatLessons, setFlatLessons] = useState([]);
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Play, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Text,
+  VStack,
+  HStack,
+  Progress,
+  Radio,
+  RadioGroup,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  List,
+  ListItem,
+  AspectRatio,
+  useColorModeValue,
+  Stack,
+  IconButton
+} from '@chakra-ui/react';
 import API_URL from '../../Constants/Const';
+import VideoQuizModal from './VideoQuizModal';
+import LessonContentTabs from './LessonContentTabs';
+
+// Quiz Component
+const Quiz = ({ quizzes, onQuizComplete, onBack }) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [showResults, setShowResults] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const borderColor = useColorModeValue('blue.100', 'blue.700');
+  const hoverBg = useColorModeValue('blue.50', 'blue.700');
+
+  const handleAnswerSelect = (questionId, answer) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
+    }));
+  };
+
+  const calculateScore = () => {
+    let correct = 0;
+    quizzes.forEach(quiz => {
+      if (selectedAnswers[quiz.id] === quiz.correctAnswer) {
+        correct++;
+      }
+    });
+    return (correct / quizzes.length) * 100;
+  };
+
+  const handleSubmit = () => {
+    const finalScore = calculateScore();
+    setScore(finalScore);
+    setShowResults(true);
+    onQuizComplete(finalScore);
+  };
+
+  if (showResults) {
+    return (
+      <Box my={6} p={6} borderWidth="1px" borderRadius="lg" boxShadow="sm">
+        <Heading size="lg" mb={4}>Quiz Results</Heading>
+        <Text fontSize="lg" mb={4}>Your score: {score.toFixed(1)}%</Text>
+        {score >= 80 ? (
+          <Alert status="success" mb={4}>
+            <AlertIcon />
+            <AlertDescription>
+              Congratulations! You can continue with the lesson.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert status="error" mb={4}>
+            <AlertIcon />
+            <AlertDescription>
+              You need to score at least 80% to continue. Please try again.
+            </AlertDescription>
+          </Alert>
+        )}
+        <Button colorScheme="blue" onClick={onBack}>
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
+
+  const currentQuestion = quizzes[currentQuestionIndex];
+
+  return (
+    <Box my={6} p={6} borderWidth="1px" borderRadius="lg" boxShadow="sm">
+      <Heading size="lg" mb={6}>Knowledge Check</Heading>
+      <VStack spacing={6} align="stretch">
+        <Text fontSize="lg">{currentQuestion.question}</Text>
+        <RadioGroup
+          onChange={(value) => handleAnswerSelect(currentQuestion.id, value)}
+          value={selectedAnswers[currentQuestion.id]}
+        >
+          <VStack spacing={3} align="stretch">
+            {currentQuestion.options.map((option, index) => (
+              <Box
+                key={index}
+                borderWidth="1px"
+                borderRadius="md"
+                p={3}
+                _hover={{ bg: hoverBg }}
+                cursor="pointer"
+              >
+                <Radio value={option} w="100%">
+                  {option}
+                </Radio>
+              </Box>
+            ))}
+          </VStack>
+        </RadioGroup>
+        <HStack justify="space-between">
+          <Button
+            leftIcon={<ChevronLeft />}
+            onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+            isDisabled={currentQuestionIndex === 0}
+            colorScheme="blue"
+          >
+            Previous Question
+          </Button>
+          {currentQuestionIndex === quizzes.length - 1 ? (
+            <Button
+              onClick={handleSubmit}
+              isDisabled={Object.keys(selectedAnswers).length < quizzes.length}
+              colorScheme="green"
+            >
+              Submit Quiz
+            </Button>
+          ) : (
+            <Button
+              rightIcon={<ChevronRight />}
+              onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+              colorScheme="blue"
+            >
+              Next Question
+            </Button>
+          )}
+        </HStack>
+      </VStack>
+    </Box>
+  );
+};
 
 const CourseContent = () => {
   const { courseId } = useParams();
@@ -31,6 +160,8 @@ const CourseContent = () => {
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
   const [flatLessons, setFlatLessons] = useState([]);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizPassed, setQuizPassed] = useState({});
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -95,71 +226,18 @@ const CourseContent = () => {
     fetchCourse();
   }, [courseId]);
 
-  // useEffect(() => {
-  //   const fetchCourse = async () => {
-  //     try {
-  //       const token = localStorage.getItem('token');
-  //       const [courseResponse, progressResponse] = await Promise.all([
-  //         axios.get(`${API_URL}/api/lesson/byCourse/${courseId}`, {
-  //           headers: {
-  //             'Authorization': `Bearer ${token}`,
-  //             'Accept': 'application/json'
-  //           }
-  //         }),
-  //         axios.get(`${API_URL}/api/progress/${courseId}`, {
-  //           headers: {
-  //             'Authorization': `Bearer ${token}`,
-  //             'Accept': 'application/json'
-  //           }
-  //         })
-  //       ]);
-
-  //       if (courseResponse.data.message === "No lessons found") {
-  //         setCourse({ title: "No lessons available" });
-  //         setFlatLessons([]);
-  //       } else if (courseResponse.data.data && courseResponse.data.data.length > 0) {
-  //         const courseData = courseResponse.data.data[0];
-  //         const mainLesson = {
-  //           id: courseData.id,
-  //           title: courseData.title,
-  //           content: courseData.content,
-  //           videoUrl: courseData.videoUrl,
-  //           isMainLesson: true,
-  //           quizzes: courseData.quizzes
-  //         };
-  //         const subLessons = courseData.subLessons || [];
-  //         const allLessons = [mainLesson, ...subLessons];
-
-  //         setCourse({
-  //           ...courseData.course,
-  //           lessons: allLessons
-  //         });
-  //         setFlatLessons(allLessons);
-
-  //         const overallProgress = progressResponse?.data[0]?.progress || 0;
-  //         setProgress(overallProgress);
-  //       } else {
-  //         throw new Error('No course data found');
-  //       }
-
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error('Error fetching course:', err);
-  //       setError('Failed to fetch course content. Please try again later.');
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchCourse();
-  // }, [courseId]);
-
   const handleLessonClick = (index) => {
     setCurrentLessonIndex(index);
     setShowDescription(false);
+    setShowQuiz(false);
   };
 
   const handleNext = () => {
-    if (currentLessonIndex < flatLessons.length - 1) {
+    const currentLesson = flatLessons[currentLessonIndex];
+
+    if (currentLesson.quizzes?.length > 0 && !quizPassed[currentLesson.id]) {
+      setShowQuiz(true);
+    } else if (currentLessonIndex < flatLessons.length - 1) {
       setCurrentLessonIndex(currentLessonIndex + 1);
       setShowDescription(false);
       updateProgress();
@@ -172,17 +250,61 @@ const CourseContent = () => {
     if (currentLessonIndex > 0) {
       setCurrentLessonIndex(currentLessonIndex - 1);
       setShowDescription(false);
+      setShowQuiz(false);
     }
   };
 
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="animate-pulse">
+          <div className="h-10 w-40 bg-sky-200 rounded mb-8"></div>
+          <div className="h-12 bg-sky-200 rounded mb-4"></div>
+          <div className="h-6 w-3/4 bg-sky-200 rounded mb-12"></div>
+          <div className="flex flex-col lg:flex-row gap-10">
+            <div className="flex-grow space-y-10">
+              <div className="h-64 bg-sky-200 rounded"></div>
+              <div className="h-96 bg-sky-200 rounded"></div>
+            </div>
+            <div className="w-full lg:w-80 space-y-6">
+              <div className="h-40 bg-sky-200 rounded"></div>
+              <div className="h-40 bg-sky-200 rounded"></div>
+              <div className="h-40 bg-sky-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    );
+
+    const ErrorAlert = ({message}) => (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white">
+      <div className="bg-sky-100 border-l-4 border-sky-800 text-sky-800 p-4 rounded-md max-w-md">
+        <p className="font-bold">Error</p>
+        <p>{message}</p>
+      </div>
+    </div>
+    );
+
   const handleFinalAction = () => {
-    const currentLesson = flatLessons[currentLessonIndex];
     if (currentLessonIndex === flatLessons.length - 1) {
       navigate(`/assessment/${courseId}`);
-    } else if (currentLesson.quizzes && currentLesson.quizzes.length > 0) {
-      navigate(`/quiz/${currentLesson.id}?courseId=${courseId}`);
-    } else {
-      console.error('No quiz or final assessment available');
+    }
+  };
+
+  const handleQuizComplete = (score) => {
+    if (score >= 80) {
+      setQuizPassed(prev => ({
+        ...prev,
+        [flatLessons[currentLessonIndex].id]: true
+      }));
+      if (currentLessonIndex < flatLessons.length - 1) {
+        setCurrentLessonIndex(currentLessonIndex + 1);
+        setShowQuiz(false);
+        updateProgress();
+      } else {
+        handleFinalAction();
+      }
     }
   };
 
@@ -224,152 +346,130 @@ const CourseContent = () => {
   const currentLesson = flatLessons[currentLessonIndex];
   const isLastLesson = currentLessonIndex === flatLessons.length - 1;
 
+  const renderContent = () => {
+    const currentLesson = flatLessons[currentLessonIndex];
+    const isLastLesson = currentLessonIndex === flatLessons.length - 1;
+    const hasQuiz = currentLesson.quizzes?.length > 0;
+  
+    return (
+      <Box flex="1">
+        {currentLesson.videoUrl && hasQuiz ? (
+          <VideoQuizModal
+            videoUrl={currentLesson.videoUrl}
+            quizzes={currentLesson.quizzes}
+            onQuizComplete={(score) => handleQuizComplete(score)}
+          />
+        ) : (
+          <AspectRatio ratio={16 / 9} mb={4} bg="black" borderRadius="md" overflow="hidden">
+            {currentLesson.videoUrl ? (
+              <iframe
+                src={currentLesson.videoUrl}
+                allowFullScreen
+              />
+            ) : (
+              <Flex align="center" justify="center">
+                <Play size={48} color="white" />
+              </Flex>
+            )}
+          </AspectRatio>
+        )}
+  
+        <Box className="prose">
+          <Heading size="lg" mb={4} color="blue.700">
+            {currentLesson.title}
+          </Heading>
+          {/* <Box dangerouslySetInnerHTML={{ __html: currentLesson.content }} /> */}
+          <LessonContentTabs 
+            lessonId={currentLesson.id}
+            content={currentLesson.content}
+          />
+        </Box>
+  
+        <HStack justify="space-between" mt={6}>
+          <Button
+            leftIcon={<ChevronLeft />}
+            onClick={handleBack}
+            isDisabled={currentLessonIndex === 0}
+            colorScheme="blue"
+          >
+            Previous
+          </Button>
+          <Button
+            rightIcon={<ChevronRight />}
+            onClick={handleNext}
+            isDisabled={hasQuiz && !quizPassed[currentLesson.id]}
+            colorScheme={isLastLesson ? 'green' : 'blue'}
+          >
+            {isLastLesson ? 'Take Final Assessment' : 'Next'}
+          </Button>
+        </HStack>
+      </Box>
+    );
+  };
+
+  if (loading) return <LoadingSkeleton />;
+  if (error) return <ErrorAlert message={error} />;
+  if (!course) return <Text color="blue.700">No course data available.</Text>;
+
   return (
-    <div className="min-h-screen min-w-screen bg-white">
-      <div className="container mx-auto px-4 py-8">
-        <button
+    <Box minH="100vh" bg="white">
+      <Container maxW="container.xl" py={8}>
+        <Button
+          leftIcon={<ArrowLeft />}
           onClick={() => navigate('/courses')}
-          className="flex items-center text-sky-800 hover:text-sky-600 mb-4"
+          variant="ghost"
+          colorScheme="blue"
+          mb={4}
         >
-          <ArrowLeft className="mr-2" size={20} />
           Home
-        </button>
-        <h1 className="text-3xl font-bold mb-4 text-sky-800">{course.title}</h1>
-        <div className="relative w-full bg-sky-100 rounded-full h-2.5 mb-4">
-          <div 
-            className="bg-sky-800 h-2.5 rounded-full" 
-            style={{ width: `${progress}%` }}
-          ></div>
-          <div className="text-center text-sm text-sky-800 font-medium">
+        </Button>
+        
+        <Heading size="xl" mb={4} color="blue.700">
+          {course.title}
+        </Heading>
+        
+        <Box position="relative" mb={4}>
+          <Progress
+            value={progress}
+            size="sm"
+            colorScheme="blue"
+            borderRadius="full"
+          />
+          <Text textAlign="center" fontSize="sm" mt={1}>
             {progress}%
-          </div>
-        </div>
+          </Text>
+        </Box>
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4 pt-4">
-          {/* Main content area */}
-          <div className="flex-1">
-            {/* Video player */}
-            <div className="bg-black h-0 pb-[56.25%] mb-4 relative">
-              {currentLesson.videoUrl ? (
-                <iframe
-                  src={currentLesson.videoUrl}
-                  className="absolute top-0 left-0 w-full h-full"
-                  frameBorder="0"
-                  allowFullScreen
-                />
-              ) : (
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                  <Play size={48} color="white" />
-                </div>
-              )}
-              {showDescription && (
-                <div className="absolute bottom-0 left-0 right-0 bg-sky-800 bg-opacity-70 text-white p-2">
-                  <h3 className="font-bold">{currentLesson.title}</h3>
-                </div>
-              )}
-            </div>
+        <Stack direction={{ base: 'column', lg: 'row' }} spacing={8} mt={4}>
+          {renderContent()}
 
-            {/* Video controls */}
-            <div className="flex justify-between mb-4">
-              <button
-                onClick={handleBack}
-                disabled={currentLessonIndex === 0}
-                className="flex items-center px-4 py-2 bg-sky-800 text-white rounded-md disabled:opacity-50"
-              >
-                <ChevronLeft className="mr-2" size={20} />
-                Previous
-              </button>
-              <button
-                onClick={handleNext}
-                className={`flex items-center px-4 py-2 ${isLastLesson ? 'bg-green-500 hover:bg-green-600' : 'bg-sky-800 hover:bg-sky-700'} text-white rounded-md`}
-              >
-                {isLastLesson ? 'Take Final Assessment' : 'Next'}
-                <ChevronRight className="ml-2" size={20} />
-              </button>
-            </div>
-
-            {/* Lesson content */}
-            <div className="prose max-w-none">
-              <h2 className="text-2xl font-bold mb-4 text-sky-800">{currentLesson.title}</h2>
-              <div dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          {/* <div className="lg:w-1/4">
-            <h3 className="text-xl font-bold mb-4 text-sky-800">Lessons</h3>
-            <ul>
+          <Box w={{ base: 'full', lg: '25%' }}>
+            <Heading size="lg" mb={4} color="blue.700">
+              Lessons
+            </Heading>
+            <List spacing={2}>
               {flatLessons.map((lesson, index) => (
-                <li
+                <ListItem
                   key={lesson.id}
-                  className={`cursor-pointer p-2 rounded ${
-                    index === currentLessonIndex
-                      ? 'bg-sky-800 text-white'
-                      : 'hover:bg-sky-100'
-                  }`}
                   onClick={() => handleLessonClick(index)}
+                  p={2}
+                  borderRadius="md"
+                  cursor="pointer"
+                  bg={index === currentLessonIndex ? 'blue.500' : 'transparent'}
+                  color={index === currentLessonIndex ? 'white' : 'inherit'}
+                  _hover={{ bg: index === currentLessonIndex ? 'blue.600' : 'blue.50' }}
+                  pl={lesson.isMainLesson ? 2 : 6}
+                  fontWeight={lesson.isMainLesson ? 'bold' : 'normal'}
                 >
                   {lesson.title}
-                </li>
+                </ListItem>
               ))}
-            </ul>
-          </div> */}
-
-                    {/* Sidebar */}
-                    <div className="lg:w-1/4">
-            <h3 className="text-xl font-bold mb-4 text-sky-800">Lessons</h3>
-            <ul>
-              {flatLessons.map((lesson, index) => (
-                <li
-                  key={lesson.id}
-                  className={`cursor-pointer p-2 rounded ${
-                    index === currentLessonIndex
-                      ? 'bg-sky-800 text-white'
-                      : 'hover:bg-sky-100'
-                  } ${lesson.isMainLesson ? 'font-bold' : 'pl-4'}`}
-                  onClick={() => handleLessonClick(index)}
-                >
-                  {lesson.title}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+            </List>
+          </Box>
+        </Stack>
+      </Container>
+    </Box>
   );
 };
-
-const LoadingSkeleton = () => (
-  <div className="min-h-screen bg-white py-12">
-    <div className="container mx-auto px-4">
-      <div className="animate-pulse">
-        <div className="h-10 w-40 bg-sky-200 rounded mb-8"></div>
-        <div className="h-12 bg-sky-200 rounded mb-4"></div>
-        <div className="h-6 w-3/4 bg-sky-200 rounded mb-12"></div>
-        <div className="flex flex-col lg:flex-row gap-10">
-          <div className="flex-grow space-y-10">
-            <div className="h-64 bg-sky-200 rounded"></div>
-            <div className="h-96 bg-sky-200 rounded"></div>
-          </div>
-          <div className="w-full lg:w-80 space-y-6">
-            <div className="h-40 bg-sky-200 rounded"></div>
-            <div className="h-40 bg-sky-200 rounded"></div>
-            <div className="h-40 bg-sky-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const ErrorAlert = ({ message }) => (
-  <div className="min-h-screen flex items-center justify-center p-4 bg-white">
-    <div className="bg-sky-100 border-l-4 border-sky-800 text-sky-800 p-4 rounded-md max-w-md">
-      <p className="font-bold">Error</p>
-      <p>{message}</p>
-    </div>
-  </div>
-);
 
 export default CourseContent;
