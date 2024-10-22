@@ -235,7 +235,7 @@ const AddLessonModal = ({ isOpen, onClose, courseId, onLessonAdded }) => {
           </div>
 
           <div>
-            <label htmlFor="video" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="video" className="block text-sm font-medium text-gray-700 mb-1 mt-5">
               Video Upload
             </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">

@@ -66,7 +66,7 @@ const EditCoursePage = () => {
       const response = await fetch(`${API_URL}/api/course/update/${id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(course),

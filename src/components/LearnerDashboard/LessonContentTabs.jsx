@@ -108,12 +108,21 @@ const LessonContentTabs = ({ lessonId, content }) => {
             setDiscussions(Array.isArray(data.data) ? data.data : []);
         } catch (error) {
             console.error('Error fetching discussions:', error);
-            setError('Failed to load discussions. Please try again later.');
+            setError("No dissussions Yet");
+            // if (error.message !== 'Unauthorized') {
+            //     toast({
+            //         title: "Error",
+            //         description: "Failed to load discussions. Please try again.",
+            //         status: "error",
+            //         duration: 5000,
+            //         isClosable: true,
+            //     });
+            // }
             if (error.message !== 'Unauthorized') {
                 toast({
-                    title: "Error",
-                    description: "Failed to load discussions. Please try again.",
-                    status: "error",
+                    title: "info",
+                    description: "No discussions yet",
+                    status: "info",
                     duration: 5000,
                     isClosable: true,
                 });
