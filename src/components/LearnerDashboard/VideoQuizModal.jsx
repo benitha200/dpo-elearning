@@ -66,7 +66,7 @@ const VideoQuizModal = ({ videoUrl, quizzes, onQuizComplete }) => {
     setScore(finalScore);
     setShowResults(true);
     
-    if (finalScore >= 80) {
+    if (finalScore >= 50) {
       onQuizComplete(finalScore);
       onClose();
       if (videoRef.current) {
@@ -107,7 +107,7 @@ const VideoQuizModal = ({ videoUrl, quizzes, onQuizComplete }) => {
               {showResults ? (
                 <VStack spacing={4} align="stretch">
                   <Text>Your score: {score.toFixed(1)}%</Text>
-                  {score >= 80 ? (
+                  {score >= 50 ? (
                     <Alert>
                       <AlertIcon />
                       Congratulations! You can continue with the video.
@@ -116,7 +116,7 @@ const VideoQuizModal = ({ videoUrl, quizzes, onQuizComplete }) => {
                     <VStack spacing={4} align="stretch">
                       <Alert>
                         <AlertIcon />
-                        You need to score at least 80% to continue. Please try again.
+                        You need to score at least 50% to continue. Please try again.
                       </Alert>
                       <Button
                         onClick={() => {
