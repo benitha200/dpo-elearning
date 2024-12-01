@@ -29,7 +29,7 @@ const LearnerDashboard = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const SidebarLink = ({ icon: Icon, text }) => (
-    <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-md transition duration-150 ease-in-out">
+    <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-sky-50 hover:text-sky-600 rounded-md transition duration-150 ease-in-out">
       <Icon className="h-5 w-5 mr-3" />
       <span className="font-medium">{text}</span>
     </a>
@@ -42,7 +42,7 @@ const LearnerDashboard = () => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 shadow-lg`}>
         <div className="p-5 flex items-center justify-between border-b border-gray-200">
-          <span className="text-2xl font-bold text-indigo-600">DPO E-Learning</span>
+          <span className="text-2xl font-bold text-sky-600">DPO E-Learning</span>
           <button onClick={toggleSidebar} className="lg:hidden text-gray-500 hover:text-gray-600">
             <X className="h-6 w-6" />
           </button>
@@ -72,8 +72,8 @@ const LearnerDashboard = () => {
                   <Bell className="h-6 w-6" />
                 </button>
                 <div className="flex items-center space-x-3">
-                  <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                    <User className="h-5 w-5 text-indigo-600" />
+                  <div className="h-8 w-8 rounded-full bg-sky-100 flex items-center justify-center">
+                    <User className="h-5 w-5 text-sky-600" />
                   </div>
                   <span className="text-sm font-medium text-gray-700">John Doe</span>
                 </div>
@@ -115,7 +115,7 @@ const LearnerDashboard = () => {
                     ].map((item, index) => (
                       <li key={index} className="py-4">
                         <div className="flex items-center">
-                          <Calendar className="h-5 w-5 text-indigo-500 mr-2" />
+                          <Calendar className="h-5 w-5 text-sky-500 mr-2" />
                           <p className="text-sm font-medium text-gray-900">{item.course}: {item.task}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">{item.date}</p>
@@ -137,7 +137,7 @@ const LearnerDashboard = () => {
                     ].map((item, index) => (
                       <li key={index} className="py-4">
                         <div className="flex items-center">
-                          <Clock className="h-5 w-5 text-indigo-500 mr-2" />
+                          <Clock className="h-5 w-5 text-sky-500 mr-2" />
                           <p className="text-sm font-medium text-gray-900">{item.action}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">{item.course} - {item.time}</p>
@@ -160,7 +160,7 @@ const LearnerDashboard = () => {
                 ].map((item, index) => (
                   <div key={index} className="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition duration-300 ease-in-out">
                     <div className="p-5 flex flex-col items-center">
-                      <item.icon className="h-8 w-8 text-indigo-600 mb-2" />
+                      <item.icon className="h-8 w-8 text-sky-600 mb-2" />
                       <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
                     </div>
                   </div>

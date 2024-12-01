@@ -192,8 +192,8 @@ const App = () => {
             <SidebarLink icon={Book} text="Progress" to="/progress" />
             <SidebarLink icon={Calendar} text="Schedule" to="/schedule" />
             <SidebarLink icon={Award} text="Certificates" to="/certificates" />
-            <SidebarLink icon={Settings2} text="Settings" to="/settings" />
-            <SidebarLink icon={HelpCircle} text="Support" to="/support" />
+            {/* <SidebarLink icon={Settings2} text="Settings" to="/settings" /> */}
+            {/* <SidebarLink icon={HelpCircle} text="Support" to="/support" /> */}
           </>
         );
       case 'instructor':

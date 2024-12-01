@@ -46,8 +46,8 @@ const AdminDashboard = () => {
           <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
           <p className="text-2xl font-semibold text-gray-900">{value}</p>
         </div>
-        <div className="bg-indigo-100 p-3 rounded-full">
-          <Icon className="h-6 w-6 text-indigo-600" />
+        <div className="bg-sky-100 p-3 rounded-full">
+          <Icon className="h-6 w-6 text-sky-600" />
         </div>
       </div>
       <div className={`mt-2 flex items-center text-sm ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -141,8 +141,8 @@ const AdminDashboard = () => {
             ].map((item, index) => (
               <li key={index} className="py-4">
                 <div className="flex items-center">
-                  <div className="bg-indigo-100 p-2 rounded-full mr-3">
-                    <User className="h-5 w-5 text-indigo-600" />
+                  <div className="bg-sky-100 p-2 rounded-full mr-3">
+                    <User className="h-5 w-5 text-sky-600" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">{item.action}</p>
@@ -165,8 +165,8 @@ const AdminDashboard = () => {
             { name: 'Generate Report', icon: FileText },
             { name: 'System Backup', icon: Database },
           ].map((action, index) => (
-            <button key={index} className="flex flex-col items-center justify-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition duration-150 ease-in-out">
-              <action.icon className="h-8 w-8 text-indigo-600 mb-2" />
+            <button key={index} className="flex flex-col items-center justify-center p-4 bg-sky-50 rounded-lg hover:bg-sky-100 transition duration-150 ease-in-out">
+              <action.icon className="h-8 w-8 text-sky-600 mb-2" />
               <span className="text-sm font-medium text-gray-900">{action.name}</span>
             </button>
           ))}

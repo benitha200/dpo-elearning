@@ -85,22 +85,25 @@ const HomePage = () => {
       <Box as="nav" bg="white" boxShadow="sm" position="sticky" top="0" zIndex="sticky">
         <Container maxW="container.xl">
           <Flex h={16} alignItems="center" justifyContent="space-between">
-            <Heading size="md" color="blue.600">Data Security Hub</Heading>
-            <HStack spacing={8}>
-              <Link onClick={() => scrollToSection(homeRef)}>Home</Link>
-              <Link onClick={() => scrollToSection(coursesRef)}>Courses</Link>
-              <Link onClick={() => scrollToSection(whyUsRef)}>WhyUs</Link>
-              {/* <Link onClick={() => scrollToSection(testimonialsRef)}>Testimonials</Link> */}
-            </HStack>
-            <Button colorScheme="blue">
-              <Link style={{ color: 'white' }}><a
-              href="/login"
-              className="text-white hover:text-sky-700 transition duration-150"
-            >
-              Login
-              </a>
-            </Link>
-            </Button>
+            <Heading size="md" color="blue.600">CyberAware Solution</Heading>
+            <div className='flex gap-4'>
+              <HStack spacing={8}>
+                <Link onClick={() => scrollToSection(homeRef)}>Home</Link>
+                <Link onClick={() => scrollToSection(coursesRef)}>Courses</Link>
+                <Link onClick={() => scrollToSection(whyUsRef)}>WhyUs</Link>
+                {/* <Link onClick={() => scrollToSection(testimonialsRef)}>Testimonials</Link> */}
+              </HStack>
+              <Button colorScheme="blue">
+                <Link style={{ color: 'white' }}><a
+                  href="/login"
+                  className="text-white hover:text-sky-700 transition duration-150"
+                >
+                  Login
+                </a>
+                </Link>
+              </Button>
+            </div>
+
           </Flex>
         </Container>
       </Box>
@@ -123,25 +126,6 @@ const HomePage = () => {
               </VStack>
               <Button size="lg" colorScheme="yellow" onClick={() => scrollToSection(coursesRef)}>Explore Courses</Button>
             </Box>
-            {/* <Box flex={1}> */}
-            {/* <Image src={img1} alt="Data Security Learning" borderRadius="lg" boxShadow="xl" /> */}
-            {/* <video
-                controls
-                autoPlay
-                muted
-                loop
-                src="/src/assets/videos/1.mp4"
-                poster={img1}
-                style={{
-                  borderRadius: '1rem',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-              >
-                Your browser does not support the video tag.
-              </video> */}
 
             <Box
               flex={1.5}
@@ -202,7 +186,7 @@ const HomePage = () => {
       <Box as="section" bg="gray.100" py={20} ref={whyUsRef}>
         <Container maxW="container.xl">
           <Heading as="h2" size="2xl" textAlign="center" mb={12}>
-            Why Choose Data Security Hub
+            Why Choose CyberAware Solution
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={10}>
             {[
@@ -380,7 +364,7 @@ const HomePage = () => {
         <Container maxW="container.xl">
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
             <VStack align="start">
-              <Heading size="md" mb={4}>Data Security Hub</Heading>
+              <Heading size="md" mb={4}>CyberAware Solution</Heading>
               <Text>Empowering data security professionals worldwide</Text>
             </VStack>
             <VStack align="start">
