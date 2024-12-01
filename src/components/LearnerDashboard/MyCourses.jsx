@@ -498,9 +498,13 @@ const MyCourses = () => {
   const processPayment = async (paymentDetails) => {
     try {
       const token = localStorage.getItem('token');
+      const coursePrice = parseFloat(
+        allCourses.find(course => course.id === enrollingCourseId).price
+      );
+
       const response = await axios.post(`${API_URL}/api/pay/cashin/${enrollingCourseId}`, {
         phoneNumber: paymentDetails.phoneNumber,
-        amount: allCourses.find(course => course.id === enrollingCourseId).price,
+        amount: coursePrice,
         paymentMethod: paymentDetails.paymentMethod
       }, {
         headers: {
