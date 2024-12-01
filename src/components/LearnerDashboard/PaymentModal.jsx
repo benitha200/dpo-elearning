@@ -16,12 +16,12 @@ import {
   Text
 } from '@chakra-ui/react';
 
-const PaymentModal = ({ 
-  isOpen, 
-  onClose, 
-  courseTitle, 
-  coursePrice, 
-  onSubmitPayment 
+const PaymentModal = ({
+  isOpen,
+  onClose,
+  courseTitle,
+  coursePrice,
+  onSubmitPayment
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('momo');
@@ -47,8 +47,15 @@ const PaymentModal = ({
     });
   };
 
+  // Reset state when modal closes
+  const handleClose = () => {
+    setPhoneNumber('');
+    setPaymentMethod('momo');
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -62,18 +69,18 @@ const PaymentModal = ({
           <VStack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Phone Number</FormLabel>
-              <Input 
-                type="tel" 
+              <Input
+                type="tel"
                 placeholder="Enter your phone number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 pattern="[0-9]*"
               />
             </FormControl>
-
+            
             <FormControl>
               <FormLabel>Payment Method</FormLabel>
-              <Button 
+              <Button
                 variant={paymentMethod === 'momo' ? 'solid' : 'outline'}
                 colorScheme="blue"
                 onClick={() => setPaymentMethod('momo')}
@@ -86,14 +93,14 @@ const PaymentModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button 
-            colorScheme="blue" 
-            mr={3} 
+          <Button
+            colorScheme="blue"
+            mr={3}
             onClick={handleSubmit}
           >
             Pay Now
           </Button>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={handleClose}>
             Cancel
           </Button>
         </ModalFooter>
